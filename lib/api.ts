@@ -1,5 +1,6 @@
 import axios from "axios";
-import type { FetchNotesResponse, NewNoteData, Note } from "@/types/note";
+import type { FetchNotesResponse } from "@/types/api";
+import type { NewNoteData, Note } from "@/types/note";
 
 function getNoteHubApi() {
   const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;

@@ -2,15 +2,14 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Modal } from "@/components/Modal/Modal";
 import { NoteForm } from "@/components/NoteForm/NoteForm";
 import { NoteList } from "@/components/NoteList/NoteList";
 import { Pagination } from "@/components/Pagination/Pagination";
 import { SearchBox } from "@/components/SearchBox/SearchBox";
-import { createNote, fetchNotes } from "@/lib/api";
+import { fetchNotes } from "@/lib/api";
 import { notesKeys } from "@/lib/queryKeys";
-import type { NewNoteData } from "@/types/note";
 import css from "./page.module.css";
 
 type NotesClientProps = {
@@ -22,7 +21,6 @@ export function NotesClient({ initialPage, initialSearch }: NotesClientProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const queryClient = useQueryClient();
   const [isPending, startTransition] = useTransition();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState(initialSearch);
@@ -64,14 +62,8 @@ export function NotesClient({ initialPage, initialSearch }: NotesClientProps) {
   const { data, isLoading, error } = useQuery({
     queryKey: notesKeys.list(page, search),
     queryFn: () => fetchNotes({ page, search }),
-  });
-
-  const createMutation = useMutation({
-    mutationFn: (payload: NewNoteData) => createNote(payload),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: notesKeys.lists() });
-      setIsModalOpen(false);
-    },
+    placeholderData: keepPreviousData,
+    refetchOnMount: false,
   });
 
   const handlePageChange = (nextPage: number) => {
@@ -116,10 +108,7 @@ export function NotesClient({ initialPage, initialSearch }: NotesClientProps) {
 
       {isModalOpen ? (
         <Modal onClose={() => setIsModalOpen(false)}>
-          <NoteForm
-            onSubmit={(payload) => createMutation.mutateAsync(payload)}
-            onCancel={() => setIsModalOpen(false)}
-          />
+          <NoteForm onCancel={() => setIsModalOpen(false)} />
         </Modal>
       ) : null}
     </main>

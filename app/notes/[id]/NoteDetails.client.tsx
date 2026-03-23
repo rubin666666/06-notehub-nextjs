@@ -22,6 +22,7 @@ export function NoteDetailsClient() {
     queryKey: notesKeys.detail(noteId),
     queryFn: () => fetchNoteById(noteId),
     enabled: Boolean(noteId),
+    refetchOnMount: false,
   });
 
   if (isLoading) {

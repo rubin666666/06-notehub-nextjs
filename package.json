@@ -13,12 +13,15 @@
     "@tanstack/react-query": "^5.95.0",
     "@vitejs/plugin-react": "^6.0.1",
     "axios": "^1.13.6",
+    "formik": "^2.4.9",
     "modern-normalize": "^3.0.1",
     "next": "16.2.1",
     "prettier": "^3.8.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-paginate": "^8.3.0"
+    "react-paginate": "^8.3.0",
+    "use-debounce": "^10.1.0",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
